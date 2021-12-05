@@ -154,9 +154,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CellPrefab: {fileID: 4625792431778605821, guid: 7ef77ed447e1bcf488f8df2874124b96, type: 3}
-  width: 30
-  height: 30
+  width: 20
+  height: 20
   CC: 0
+  interval: 2
 --- !u!4 &223420715
 Transform:
   m_ObjectHideFlags: 0
@@ -232,7 +233,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 1, g: 1, b: 1, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
