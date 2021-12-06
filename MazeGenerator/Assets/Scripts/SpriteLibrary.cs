@@ -15,8 +15,5 @@ public class SpriteLibrary : MonoBehaviour
         Passage = Resources.Load<Material>("Passage");
         Frontier = Resources.Load<Material>("Frontier");
         ThinWall = Resources.Load<Material>("ThinWall");
-        //if (CellSprite != null) Debug.Log("Sprite loaded");
-        //if (Wall != null) Debug.Log("Wall loaded");
-        //if (Passage != null) Debug.Log("Passage loaded");
     }
 }

@@ -16,6 +16,8 @@ public class CameraPan : MonoBehaviour
     // Cache the current screen width in case we switch resolutions
     int currentResWidth;
     float screenWidthHeightRatio;
+    int lastGeneratedWidth;
+    int lastGeneratedHeight;
 
     // Cache the current camera orthographic size in case we change it
     float camOrthoSize;
@@ -26,6 +28,8 @@ public class CameraPan : MonoBehaviour
         currentResWidth = Screen.width;
         camOrthoSize = cam.orthographicSize;
         screenWidthHeightRatio = (float)Screen.width / Screen.height;
+        lastGeneratedWidth = MazeGenerator.MAZE_WIDTH;
+        lastGeneratedHeight = MazeGenerator.MAZE_HEIGHT;
         xAxisConstraints = GetXAxisConstraints((float)MazeGenerator.MAZE_WIDTH);
         yAxisConstraints = GetYAxisConstraints((float)MazeGenerator.MAZE_HEIGHT);
         UpdateCameraTransform();
@@ -38,6 +42,13 @@ public class CameraPan : MonoBehaviour
             currentResWidth = Screen.width;
             camOrthoSize = cam.orthographicSize;
             screenWidthHeightRatio = (float)Screen.width / Screen.height;
+            UpdateCameraTransform();
+        }
+
+        if(lastGeneratedWidth != MazeGenerator.MAZE_WIDTH || lastGeneratedHeight != MazeGenerator.MAZE_HEIGHT)
+        {
+            lastGeneratedWidth = MazeGenerator.MAZE_WIDTH;
+            lastGeneratedHeight = MazeGenerator.MAZE_HEIGHT;
             UpdateCameraTransform();
         }
 

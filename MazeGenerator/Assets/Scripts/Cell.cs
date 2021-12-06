@@ -1,91 +1,92 @@
 using UnityEngine;
 
-public class Cell : MonoBehaviour
+public class Cell : MonoBehaviour, ICell
 {
-    private bool _isWall = true;
-    public bool IsWall => _isWall;
+    private bool _isBlocked = true;
+    public bool IsBlocked { get { return _isBlocked; } }
 
     private bool _processing;
     public bool Processing => _processing;
 
     private SpriteRenderer spriteRenderer;
 
-    public LineRenderer NorthWall;
-    public LineRenderer SouthWall;
-    public LineRenderer EastWall;
-    public LineRenderer WestWall;
+    [SerializeField] private LineRenderer NorthWall;
+    [SerializeField] private LineRenderer SouthWall;
+    [SerializeField] private LineRenderer EastWall;
+    [SerializeField] private LineRenderer WestWall;
 
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-
-        if(spriteRenderer != null) { 
+        if(spriteRenderer.enabled) { 
             spriteRenderer.sprite = SpriteLibrary.CellSprite;
             spriteRenderer.material = SpriteLibrary.Wall;
         }
-        NorthWall.material = SpriteLibrary.ThinWall;
-        SouthWall.material = SpriteLibrary.ThinWall;
-        EastWall.material = SpriteLibrary.ThinWall;
-        WestWall.material = SpriteLibrary.ThinWall;
+
+        NorthWall.material = SpriteLibrary.Wall;
+        SouthWall.material = SpriteLibrary.Wall;
+        EastWall.material = SpriteLibrary.Wall;
+        WestWall.material = SpriteLibrary.Wall;
+
         gameObject.SetActive(false);
     }
 
-    private void OnDisable() => MakeWall();
-    public void Enable() => gameObject.SetActive(true);
+    public void SetName(string name)
+    {
+        gameObject.name = name;
+    }
+
+    public void Reset(bool slim) {
+        gameObject.SetActive(true);      
+        ShowSlimWalls(slim);
+        _isBlocked = true;
+        _processing = false;
+        if (spriteRenderer != null) spriteRenderer.material = SpriteLibrary.Wall;
+    }
+
     public void Disable() => gameObject.SetActive(false);
+
     public Vector2Int GetIndex() => new Vector2Int((int)(transform.position.x - 0.5f), (int)(transform.position.y - 0.5f));
 
     public void Process()
     {
         _processing = true;
-        if (spriteRenderer != null) spriteRenderer.material = SpriteLibrary.Frontier;
+        spriteRenderer.enabled = true;
+        spriteRenderer.material = SpriteLibrary.Frontier;
+    } 
+
+    public void TurnIntoEndPoint()
+    {
+        spriteRenderer.enabled = true;
+        spriteRenderer.material = SpriteLibrary.Frontier;
     }
 
-
-    public void MakeWall()
-    {
-        _isWall = true;
-        _processing = false;
-        if (spriteRenderer != null) spriteRenderer.material = SpriteLibrary.Wall;
+    public void ShowSlimWalls(bool condition) {
+        spriteRenderer.enabled = !condition;
+        NorthWall.gameObject.SetActive(condition);
+        SouthWall.gameObject.SetActive(condition);
+        EastWall.gameObject.SetActive(condition);
+        WestWall.gameObject.SetActive(condition);
     }
 
-    public void MakePass()
+    public void TurnIntoPassage()
     {
-        _isWall = false;
-        _processing = false;
+        _isBlocked = false;
         if (spriteRenderer != null) spriteRenderer.material = SpriteLibrary.Passage;
     }
 
-    public void MakeEnterExit()
+    public void RemoveWallWithNeighbour(int neighbourX, int neighbourY)
     {
-        if (spriteRenderer != null) spriteRenderer.material = SpriteLibrary.Frontier;
-    }
+        if (transform.position.x < neighbourX + 0.5f)
+            EastWall.gameObject.SetActive(false);
+        else if (transform.position.x > neighbourX + 0.5f)
+            WestWall.gameObject.SetActive(false);
+        else if (transform.position.y < neighbourY + 0.5f)
+            NorthWall.gameObject.SetActive(false);
+        else
+            SouthWall.gameObject.SetActive(false);
 
-    public void ApplyWalls() {
-        NorthWall.gameObject.SetActive(true);
-        SouthWall.gameObject.SetActive(true);
-        EastWall.gameObject.SetActive(true);
-        WestWall.gameObject.SetActive(true);
-    }
-
-    public void RemoveNorthWall() {
-        NorthWall.gameObject.SetActive(false);
-        _isWall = false;
-        _processing = false;
-    }
-    public void RemoveSouthWall() { 
-        SouthWall.gameObject.SetActive(false);
-        _isWall = false;
-        _processing = false;
-    }
-    public void RemoveEastWall() {
-        EastWall.gameObject.SetActive(false);
-        _isWall = false;
-        _processing = false;
-    }
-    public void RemoveWestWall() { 
-        WestWall.gameObject.SetActive(false);
-        _isWall = false;
-        _processing = false;
+        _isBlocked = false;
+        spriteRenderer.enabled = false;
     }
 }
