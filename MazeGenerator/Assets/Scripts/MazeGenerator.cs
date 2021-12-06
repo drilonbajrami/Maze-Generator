@@ -48,7 +48,7 @@ public class MazeGenerator : MonoBehaviour
         animationTimeSlider.onValueChanged.AddListener(OnAnimationTimeSliderValueChanged);
     }
 
-    /// <summary>
+    /// <summary> 
     /// Listener method for 'Generate' button onClick event
     /// </summary>
     private void GenerateMaze()
@@ -78,15 +78,14 @@ public class MazeGenerator : MonoBehaviour
     #region UI Event Listener Methods
     private void OnWidthValueChanged(string width)
     {
-        if (width == string.Empty)
-        {
-            width = 10.ToString();
+        if (width == string.Empty) width = MIN_SIZE.ToString();
+        
+        int w = int.Parse(width);
+        if (w < MIN_SIZE || w > MAX_SIZE) {
+            widthInput = Mathf.Clamp(w, MIN_SIZE, MAX_SIZE);
+            widthInputField.text = widthInput.ToString();
         }
-        if (int.Parse(width) < MIN_SIZE || int.Parse(width) > MAX_SIZE) {
-            widthInput = Mathf.Clamp(widthInput, MIN_SIZE, MAX_SIZE);
-            widthInputField.textComponent.text = widthInput.ToString();
-        }
-        else widthInput = int.Parse(width);  
+        else widthInput = w;  
 
         if (MODE == Mode.THICK) // if mode is thick walls
         {
@@ -100,15 +99,14 @@ public class MazeGenerator : MonoBehaviour
 
     private void OnHeightValueChanged(string height)
     {
-        if (height == string.Empty)
-        {
-            height = 10.ToString();
+        if (height == string.Empty) height = MIN_SIZE.ToString();
+
+        int h = int.Parse(height);
+        if (h < MIN_SIZE || h > MAX_SIZE) {
+            heightInput = Mathf.Clamp(h, MIN_SIZE, MAX_SIZE);
+            heightInputField.text = heightInput.ToString();     
         }
-        if (int.Parse(height) < MIN_SIZE || int.Parse(height) > MAX_SIZE) {
-            heightInput = Mathf.Clamp(heightInput, MIN_SIZE, MAX_SIZE);
-            heightInputField.textComponent.text = heightInput.ToString();     
-        }
-        else heightInput = int.Parse(height);
+        else heightInput = h;
 
         if (MODE == Mode.THICK) // if mode is thick walls
         {
