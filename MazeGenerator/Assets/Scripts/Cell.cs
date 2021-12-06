@@ -36,6 +36,8 @@ public class Cell : MonoBehaviour, ICell
         gameObject.name = name;
     }
 
+    public Vector3 GetPosition() => transform.position;
+
     public void Reset(bool slim) {
         gameObject.SetActive(true);      
         ShowSlimWalls(slim);

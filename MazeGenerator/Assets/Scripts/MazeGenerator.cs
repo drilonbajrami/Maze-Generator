@@ -55,6 +55,7 @@ public class MazeGenerator : MonoBehaviour
     {
         StopAllCoroutines();
         StartCoroutine(primsAlgorithm.Run(grid, widthInput, heightInput, MAX_SIZE, MODE, seconds));
+        
     }
 
     /// <summary>

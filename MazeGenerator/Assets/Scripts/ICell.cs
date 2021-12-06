@@ -6,6 +6,7 @@ public interface ICell
 {
     // Used for setting the cell's gameObject name
     public void SetName(string name);
+    public Vector3 GetPosition();
 
     public bool IsBlocked { get; }
     public bool Processing { get; }
