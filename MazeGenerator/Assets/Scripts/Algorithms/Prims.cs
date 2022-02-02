@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PrimsAlgorithm
+public class Prims : IMazeAlgorithm
 {
+    public string Name { get => "Prim's"; }
+
     public IEnumerator Run(ICell[,] grid, int width, int height, int maxSize, Mode pMode, float waitSeconds)
     {
         int mode = (int)pMode;
@@ -27,7 +29,7 @@ public class PrimsAlgorithm
         currentCell.TurnIntoPassage();
 
         // Get the index of the current cell and its neighbours
-        Vector2Int index = currentCell.GetIndex();
+        Vector2Int index = currentCell.Index;
         GetNeighbours(grid, index.x, index.y, frontiers, mode, width, height);
 
         while (frontiers.Count > 0)
@@ -37,7 +39,7 @@ public class PrimsAlgorithm
             // Turn current cell into passage  and 
             currentCell.TurnIntoPassage();
             // Get its index
-            index = currentCell.GetIndex();
+            index = currentCell.Index;
             // Join a random available neighbour
             JoinRandomPassageNeighbour(grid, index.x, index.y, mode, width, height);
             // Remove current cell from frontier list
@@ -49,8 +51,8 @@ public class PrimsAlgorithm
         }
 
         // Start and End points
-        grid[0 + mode, 0].TurnIntoEndPoint();
-        grid[width - 1 - mode, height - 1].TurnIntoEndPoint();
+        grid[0 + mode, 0].Mark();
+        grid[width - 1 - mode, height - 1].Mark();
         yield return null;
     }
 
@@ -58,14 +60,14 @@ public class PrimsAlgorithm
     {
         // NORTH
         int neighbourY = y + 1 + mode; // mode = 0 (SLIM) || mode = 1 (THICK)
-        if (neighbourY < height - mode && grid[x, neighbourY].IsBlocked && !grid[x, neighbourY].Processing)
+        if (neighbourY < height - mode && grid[x, neighbourY].IsBlocked && !grid[x, neighbourY].IsBeingProcessed)
         {
             grid[x, neighbourY].Process();
             frontierCells.Add(grid[x, neighbourY]);
         }
         // SOUTH
         neighbourY = y - 1 - mode;
-        if (neighbourY > -1 + mode && grid[x, neighbourY].IsBlocked && !grid[x, neighbourY].Processing)
+        if (neighbourY > -1 + mode && grid[x, neighbourY].IsBlocked && !grid[x, neighbourY].IsBeingProcessed)
         {
             grid[x, neighbourY].Process();
             frontierCells.Add(grid[x, neighbourY]);
@@ -73,14 +75,14 @@ public class PrimsAlgorithm
 
         // WEST
         int neighbourX = x + 1 + mode;
-        if (neighbourX < width - mode && grid[neighbourX, y].IsBlocked && !grid[neighbourX, y].Processing)
+        if (neighbourX < width - mode && grid[neighbourX, y].IsBlocked && !grid[neighbourX, y].IsBeingProcessed)
         {
             grid[neighbourX, y].Process();
             frontierCells.Add(grid[neighbourX, y]);
         }
         // EAST
         neighbourX = x - 1 - mode;
-        if (neighbourX > -1 + mode && grid[neighbourX, y].IsBlocked && !grid[neighbourX, y].Processing)
+        if (neighbourX > -1 + mode && grid[neighbourX, y].IsBlocked && !grid[neighbourX, y].IsBeingProcessed)
         {
             grid[neighbourX, y].Process();
             frontierCells.Add(grid[neighbourX, y]);
@@ -111,19 +113,19 @@ public class PrimsAlgorithm
         if (availablePassCells.Count > 0)
         {
             int index = Random.Range(0, availablePassCells.Count);
-            Vector2Int neighbourIndex = availablePassCells[index];
+            Vector2Int nIndex = availablePassCells[index];
 
             if (mode == 0)
             { // If slim walls ( mode == 0 )
-                grid[x, y].RemoveWallWithNeighbour(neighbourIndex.x, neighbourIndex.y);
-                grid[neighbourIndex.x, neighbourIndex.y].RemoveWallWithNeighbour(x, y);
+                grid[x, y].RemoveWallWithNeighbour(nIndex.x, nIndex.y);
+                grid[nIndex.x, nIndex.y].RemoveWallWithNeighbour(x, y);
             }
             else
             { // The cell inbetween two neighbour cells
-                int inbetweenCellX = x - (x - neighbourIndex.x) / 2;
-                int inbetweenCellY = y - (y - neighbourIndex.y) / 2;
+                int midX = x - (x - nIndex.x) / 2;
+                int midY = y - (y - nIndex.y) / 2;
                 grid[x, y].TurnIntoPassage();
-                grid[inbetweenCellX, inbetweenCellY].TurnIntoPassage();
+                grid[midX, midY].TurnIntoPassage();
             }
         }
     }

@@ -25,43 +25,43 @@ public class CameraPan : MonoBehaviour
     void Start()
     {
         cam = GetComponent<Camera>();
-        currentResWidth = Screen.width;
-        camOrthoSize = cam.orthographicSize;
+        //currentResWidth = Screen.width;
+        //camOrthoSize = cam.orthographicSize;
         screenWidthHeightRatio = (float)Screen.width / Screen.height;
-        lastGeneratedWidth = MazeGenerator.MAZE_WIDTH;
-        lastGeneratedHeight = MazeGenerator.MAZE_HEIGHT;
-        xAxisConstraints = GetXAxisConstraints((float)MazeGenerator.MAZE_WIDTH);
-        yAxisConstraints = GetYAxisConstraints((float)MazeGenerator.MAZE_HEIGHT);
-        UpdateCameraTransform();
+        //lastGeneratedWidth = MazeGenerator.MAZE_WIDTH;
+        //lastGeneratedHeight = MazeGenerator.MAZE_HEIGHT;
+        //xAxisConstraints = GetXAxisConstraints((float)MazeGenerator.MAZE_WIDTH);
+        //yAxisConstraints = GetYAxisConstraints((float)MazeGenerator.MAZE_HEIGHT);
+        //UpdateCameraTransform();
     }
 
     void Update()
     {
-        if (currentResWidth != Screen.width || camOrthoSize != cam.orthographicSize)
-        {
-            currentResWidth = Screen.width;
-            camOrthoSize = cam.orthographicSize;
-            screenWidthHeightRatio = (float)Screen.width / Screen.height;
-            UpdateCameraTransform();
-        }
+        //if (currentResWidth != Screen.width || camOrthoSize != cam.orthographicSize)
+        //{
+        //    currentResWidth = Screen.width;
+        //    camOrthoSize = cam.orthographicSize;
+        //    screenWidthHeightRatio = (float)Screen.width / Screen.height;
+        //    UpdateCameraTransform();
+        //}
 
-        if(lastGeneratedWidth != MazeGenerator.MAZE_WIDTH || lastGeneratedHeight != MazeGenerator.MAZE_HEIGHT)
-        {
-            lastGeneratedWidth = MazeGenerator.MAZE_WIDTH;
-            lastGeneratedHeight = MazeGenerator.MAZE_HEIGHT;
-            UpdateCameraTransform();
-        }
+        //if(lastGeneratedWidth != MazeGenerator.MAZE_WIDTH || lastGeneratedHeight != MazeGenerator.MAZE_HEIGHT)
+        //{
+        //    lastGeneratedWidth = MazeGenerator.MAZE_WIDTH;
+        //    lastGeneratedHeight = MazeGenerator.MAZE_HEIGHT;
+        //    UpdateCameraTransform();
+        //}
 
-        if (Input.GetMouseButtonDown(0))
-        {
-            hit_position = Input.mousePosition;
-            camera_position = transform.position;
-        }
-        if (Input.GetMouseButton(0))
-        {
-            current_position = Input.mousePosition;
-            UpdateCameraTransform();
-        }
+        //if (Input.GetMouseButtonDown(0))
+        //{
+        //    hit_position = Input.mousePosition;
+        //    camera_position = transform.position;
+        //}
+        //if (Input.GetMouseButton(0))
+        //{
+        //    current_position = Input.mousePosition;
+        //    UpdateCameraTransform();
+        //}
     }
 
     void UpdateCameraTransform()
@@ -97,5 +97,15 @@ public class CameraPan : MonoBehaviour
         float yMinimum = camOrthoSize;
         float yMaximum = height <= camOrthoSize * 2 ? yMinimum : height - yMinimum;
         return new Vector2(yMinimum, yMaximum);
+    }
+
+    public void UpdateCameraSize()
+    {
+        if (MazeGenerator.MAZE_WIDTH / 2 + 3 > MazeGenerator.MAZE_HEIGHT)
+            cam.orthographicSize = MazeGenerator.MAZE_WIDTH / screenWidthHeightRatio / 2;  
+        else
+            cam.orthographicSize = (float)MazeGenerator.MAZE_HEIGHT / 2;
+
+        cam.gameObject.transform.position = new Vector3((float)MazeGenerator.MAZE_WIDTH / 2, (float)MazeGenerator.MAZE_HEIGHT / 2, -10);
     }
 }

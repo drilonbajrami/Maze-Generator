@@ -7,6 +7,7 @@ public class SpriteLibrary : MonoBehaviour
     public static Material Passage;
     public static Material Frontier;
     public static Material ThinWall;
+    public static Material Path;
 
     private void Awake()
     {
@@ -15,5 +16,6 @@ public class SpriteLibrary : MonoBehaviour
         Passage = Resources.Load<Material>("Passage");
         Frontier = Resources.Load<Material>("Frontier");
         ThinWall = Resources.Load<Material>("ThinWall");
+        Path = Resources.Load<Material>("Path");
     }
 }
